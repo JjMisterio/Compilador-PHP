@@ -1,0 +1,28 @@
+/*
+ESTRADA RAMIREZ JESUS ISAAC
+LENGUAJE PHP
+*/
+
+package act_1_lexico;
+
+import java_cup.runtime.*;
+
+parser code{:
+    public void syntax_error(Symbol s){
+        report_error("ERROR SINTACTICO")
+    }
+:}
+
+/* tokens terminales */
+terminal ABSTRACT, AND, ARRAY, AS, BREAK, CASE, CATCH, CLASS, CONST, CONTINUE, DECLARE, DEFAULT, DO, ECHO, ELSE,
+         ELSEIF, EMPTY, ENDDECLARE, ENDFOR, ENDFOREACH, ENDIF, ENDSWITCH, ENDWHILE, EXIT, EXTENDS, FINAL, FINALLY,
+         FOR, FOREACH, FUNCTION, GLOBAL, GOTO, IF, IMPLEMENTS, INCLUDE, INSTANCEOF, INSTEADOF, INTERFACE, ISSET, 
+         LIST, NAMESPACE, NEW, OR, PRINT, PRIVATE, PROTECTED, PUBLIC, REQUIRE, RETURN, STATIC, SWITCH, THROW, 
+         TRAIT, TRY, UNSET, USE, VAR, WHILE, XOR, YIELD;
+
+/* NO TERMINALES */
+non terminal    expr;
+
+start with expr;
+
+expr::=ABSTRACT;
