@@ -1,0 +1,26 @@
+$variableVal+avion
+variableVal-"carro"
+123*variableVal
+$varName123
+1variable
+@username
+123abc
+*var*
++testVar
+123abcDef
+%discountCode
+!important
+123+123
+234-234
+12a34
+56.7.8
+12,4
+35,65,5
+"Este es un string correcto"
+"Este string esta mal formado
+"Este tambien es un string correcto"
+'correcto'
+'incorrecto
+€
+£
+§
