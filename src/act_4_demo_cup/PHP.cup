@@ -1,0 +1,57 @@
+/* 
+VASQUEZ DENIZ ROBERTO
+ESTRADA RAMIREZ JESUS ISAAC
+PUENTES VEGA ANGEL DANIEL
+CORTES UBALDO HAYDEE JOSSELYN
+LENGUAJE PHP
+*/
+
+package act_4_demo_cup;
+
+import java_cup.runtime.*;
+
+parser code
+{:
+    public void syntax_error (Symbol s)
+    {
+            report_error("Error de sintaxis en linea: " + (s.left+1) +
+                        " ,columna: "+(s.right+1)+" , simbolo: "+s.value, null);
+    }
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
+   {
+                report_fatal_error(" ", null);
+    }
+:};
+
+/*SIMBOLOS TERMINALES*/
+terminal NAMESPACE, TRUE, FALSE;
+terminal PUNTO_COMA, PUNTO, OPERADOR_ASIGNACION;
+terminal IDENTIFICADOR, DECLARADOR, NUMERO_ENTERO, NUMERO_FLOTANTE;
+terminal IDENTIFICADOR_INVALIDO;
+terminal COMENTARIO_LINEA, COMENTARIO_BLOQUE, CADENA;
+
+/*SIMBOLOS NO TERMINALES*/
+non terminal sentencia, dec_entero, dec_flotante, dec_booleano, tipo_bool, dec_cadena;
+
+/*REGLAS GRAMATICALES*/
+start with sentencia;
+
+sentencia::= dec_entero | sentencia dec_entero;
+sentencia::= dec_flotante | sentencia dec_flotante;
+sentencia::= dec_booleano | sentencia dec_booleano;
+sentencia::= dec_cadena | sentencia dec_cadena;
+
+dec_entero::= DECLARADOR OPERADOR_ASIGNACION NUMERO_ENTERO PUNTO_COMA {:
+                System.out.println("Declaracion de numeros enteros");
+        :};
+dec_flotante::= DECLARADOR OPERADOR_ASIGNACION NUMERO_FLOTANTE PUNTO_COMA {:
+                System.out.println("Declaracion de numeros flotante");
+        :};
+dec_booleano::= DECLARADOR OPERADOR_ASIGNACION tipo_bool PUNTO_COMA {:
+                System.out.println("Declaracion de numeros booleano");
+        :};
+tipo_bool::= TRUE|FALSE;
+dec_cadena::= DECLARADOR OPERADOR_ASIGNACION CADENA PUNTO_COMA {:
+                System.out.println("Declaracion de cadenas");
+        :};
