@@ -1,0 +1,11 @@
+$entero = 5;
+$flotante = 1.5;
+$booleano = true;
+$booleano2 = false;
+$cadena = "ejemplo";
+$cadena2 = "";
+
+x + y * 5;
+( a - b ) / c;
+10 > 5 && 3 <= 4;
+( x + y ) * ( z - w );
