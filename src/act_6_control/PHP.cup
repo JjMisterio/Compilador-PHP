@@ -1,0 +1,162 @@
+/* 
+VASQUEZ DENIZ ROBERTO
+ESTRADA RAMIREZ JESUS ISAAC
+PUENTES VEGA ANGEL DANIEL
+CORTES UBALDO HAYDEE JOSSELYN
+LENGUAJE PHP
+*/
+
+package act_6_control;
+
+import java_cup.runtime.*;
+
+parser code
+{:
+    public void syntax_error (Symbol s)
+    {
+        report_error("Error de sintaxis en linea: " + (s.left+1) +
+                    " ,columna: "+(s.right+1)+" , simbolo: "+s.value, null);
+    }
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
+    {
+        report_fatal_error("Error de sintaxis no recuperable en linea: " + (s.left+1) +
+                    " ,columna: "+(s.right+1)+" , simbolo: "+s.value, null);
+    }
+:};
+
+/*SIMBOLOS TERMINALES*/
+terminal OR, TRUE, FALSE, IF, ELSEIF, ELSE, FOR, WHILE;
+terminal LLAVE_APERTURA, LLAVE_CIERRE, PARENTESIS_APERTURA, PARENTESIS_CIERRE, CORCHETE_APERTURA, CORCHETE_CIERRE, PUNTO_COMA, PUNTO, OPERADOR_ASIGNACION, OPERADOR_IGUALDAD, OPERADOR_IDENTIDAD, OPERADOR_DESIGUALDAD, OPERADOR_SUMA, OPERADOR_RESTA, OPERADOR_MULTIPLICACION, OPERADOR_DIVISION, OPERADOR_MODULO, OPERADOR_LOGICO_AND, OPERADOR_LOGICO_OR, OPERADOR_LOGICO_NOT, MAYOR, MENOR, MAYOR_IGUAL, MENOR_IGUAL;
+terminal IDENTIFICADOR, VARIABLE, NUMERO_ENTERO, NUMERO_FLOTANTE;
+terminal VARIABLE_INVALIDO;
+terminal COMENTARIO_LINEA, COMENTARIO_BLOQUE, CADENA;
+
+/*SIMBOLOS NO TERMINALES*/
+non terminal sentencias, sentencia, lista_sentencias, dec_entero, dec_flotante, dec_booleano, tipo_bool, dec_cadena, asignacion, expresion, operacion_aritmetica, operacion_logica, estructura_control, if_sentencia, while_sentencia, for_sentencia;
+
+/*DECLARACIÓN DE PRECEDENCIA Y ASOCIATIVIDAD*/
+precedence left OPERADOR_LOGICO_OR;
+precedence left OPERADOR_LOGICO_AND;
+precedence left OPERADOR_IGUALDAD, OPERADOR_DESIGUALDAD;
+precedence left MAYOR, MENOR, MAYOR_IGUAL, MENOR_IGUAL;
+precedence left OPERADOR_SUMA, OPERADOR_RESTA;
+precedence left OPERADOR_MULTIPLICACION, OPERADOR_DIVISION, OPERADOR_MODULO;
+
+/*REGLAS GRAMATICALES*/
+
+/* Permitir múltiples sentencias separadas por punto y coma */
+start with sentencias;
+
+/* La regla 'sentencias' permite que haya una o más sentencias separadas por punto y coma */
+sentencias::= lista_sentencias
+            | /* vacío */ {: System.out.println("Fin de entrada alcanzado"); :};
+
+lista_sentencias::= lista_sentencias sentencia PUNTO_COMA
+                  | lista_sentencias estructura_control
+                  | sentencia PUNTO_COMA
+                  | estructura_control;
+
+sentencia::= dec_entero 
+          | dec_flotante 
+          | dec_booleano 
+          | dec_cadena
+          | asignacion
+          | operacion_aritmetica
+          | operacion_logica
+          | PARENTESIS_APERTURA expresion PARENTESIS_CIERRE;
+
+dec_entero::= VARIABLE OPERADOR_ASIGNACION NUMERO_ENTERO {:
+                System.out.println("Declaracion de numero entero");
+            :};
+
+dec_flotante::= VARIABLE OPERADOR_ASIGNACION NUMERO_FLOTANTE {:
+                System.out.println("Declaracion de numero flotante");
+            :};
+
+dec_booleano::= VARIABLE OPERADOR_ASIGNACION tipo_bool {:
+                System.out.println("Declaracion de booleano");
+            :};
+
+tipo_bool::= TRUE | FALSE;
+
+dec_cadena::= VARIABLE OPERADOR_ASIGNACION CADENA {:
+                System.out.println("Declaracion de cadena");
+            :};
+
+asignacion::= VARIABLE OPERADOR_ASIGNACION operacion_aritmetica {:
+                System.out.println("Asignación realizada");
+            :};
+
+/* Reglas para operaciones aritméticas */
+expresion::= operacion_aritmetica
+          | operacion_logica
+          | NUMERO_ENTERO
+          | NUMERO_FLOTANTE
+          | VARIABLE
+          | PARENTESIS_APERTURA expresion PARENTESIS_CIERRE;
+
+operacion_aritmetica::= expresion OPERADOR_SUMA expresion {:
+                System.out.println("Suma realizada");
+            :}
+            | expresion OPERADOR_RESTA expresion {:
+                System.out.println("Resta realizada");
+            :}
+            | expresion OPERADOR_MULTIPLICACION expresion {:
+                System.out.println("Multiplicación realizada");
+            :}
+            | expresion OPERADOR_DIVISION expresion {:
+                System.out.println("División realizada");
+            :}
+            | expresion OPERADOR_MODULO expresion {:
+                System.out.println("Operación módulo realizada");
+            :};
+
+/* Reglas para operaciones lógicas */
+operacion_logica::= expresion MAYOR expresion {:
+                System.out.println("Comparación mayor realizada");
+            :}
+            | expresion MENOR expresion {:
+                System.out.println("Comparación menor realizada");
+            :}
+            | expresion MAYOR_IGUAL expresion {:
+                System.out.println("Comparación mayor o igual realizada");
+            :}
+            | expresion MENOR_IGUAL expresion {:
+                System.out.println("Comparación menor o igual realizada");
+            :}
+            | expresion OPERADOR_IGUALDAD expresion {:
+                System.out.println("Comparación de igualdad realizada");
+            :}
+            | expresion OPERADOR_DESIGUALDAD expresion {:
+                System.out.println("Comparación de desigualdad realizada");
+            :}
+            | expresion OPERADOR_LOGICO_AND expresion {:
+                System.out.println("Operación lógica AND realizada");
+            :}
+            | expresion OPERADOR_LOGICO_OR expresion {:
+                System.out.println("Operación lógica OR realizada");
+            :};
+
+// Reglas para estructuras de control
+estructura_control::= if_sentencia
+                    | while_sentencia
+                    | for_sentencia;
+
+// Regla para la sentencia if
+if_sentencia::= IF PARENTESIS_APERTURA expresion PARENTESIS_CIERRE LLAVE_APERTURA sentencias LLAVE_CIERRE
+                {: System.out.println("Sentencia if simple procesada"); :}
+              | IF PARENTESIS_APERTURA expresion PARENTESIS_CIERRE LLAVE_APERTURA sentencias LLAVE_CIERRE ELSE LLAVE_APERTURA sentencias LLAVE_CIERRE
+                {: System.out.println("Sentencia if-else procesada"); :}
+              | IF PARENTESIS_APERTURA expresion PARENTESIS_CIERRE LLAVE_APERTURA sentencias LLAVE_CIERRE ELSEIF PARENTESIS_APERTURA expresion PARENTESIS_CIERRE LLAVE_APERTURA sentencias LLAVE_CIERRE
+                {: System.out.println("Sentencia if-elseif procesada"); :}
+              | IF PARENTESIS_APERTURA expresion PARENTESIS_CIERRE LLAVE_APERTURA sentencias LLAVE_CIERRE ELSEIF PARENTESIS_APERTURA expresion PARENTESIS_CIERRE LLAVE_APERTURA sentencias LLAVE_CIERRE ELSE LLAVE_APERTURA sentencias LLAVE_CIERRE
+                {: System.out.println("Sentencia if-elseif-else procesada"); :};
+
+// Regla para la sentencia while
+while_sentencia::= WHILE PARENTESIS_APERTURA expresion PARENTESIS_CIERRE LLAVE_APERTURA sentencias LLAVE_CIERRE
+                   {: System.out.println("Sentencia while procesada"); :};
+
+// Regla para la sentencia for
+for_sentencia::= FOR PARENTESIS_APERTURA dec_entero PUNTO_COMA expresion PUNTO_COMA asignacion PARENTESIS_CIERRE LLAVE_APERTURA sentencias LLAVE_CIERRE
+                 {: System.out.println("Sentencia for procesada"); :};

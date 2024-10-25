@@ -1,0 +1,21 @@
+if ($x > 0) {
+    $entero = 1;
+} else {
+    $entero = 2;
+}
+
+if ($x > 0) {
+    $entero = 3;
+} elseif ($x == 0) {
+    $entero = 4;
+} else {
+    $entero = 5;
+}
+
+while ($x < 10) {
+    $entero = 6;
+}
+
+for ($i = 0; $i < 10; $i = $i + 1) {
+    $entero = 7;
+}
