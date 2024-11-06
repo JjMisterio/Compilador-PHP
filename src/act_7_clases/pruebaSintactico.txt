@@ -1,0 +1,21 @@
+namespace Carpeta\carpeta\archivo;
+use Carpeta\carpeta\archivo;
+
+class MiClaseTest{
+    $x = 0;
+    $y = 0;
+}
+
+class MiClase{
+    public $propiedad, $propiedad2, $propiedad3;
+    public function __construct($valor, $valor2, $valor3) {
+        $x = $x + 1;
+    }
+    public function mostrarPropiedad() {
+        $y = $Y + 1;
+    }
+}
+
+function sinretorno(): void {
+    $z = 1;
+}
