@@ -1,0 +1,37 @@
+namespace Carpeta\carpeta\archivo;
+use Carpeta\carpeta\archivo;
+
+class MiClase{
+    public $propiedad, $propiedad2,$propiedad3;
+
+    const MI_CONSTANTE1 = 10;
+    const MI_CONSTANTE2 = 12.5;
+    const MI_CONSTANTE3 = false;
+    const MI_CONSTANTE4 = "tengo valor constante";
+
+    public function __construct($valor, $valor2, $valor3) {
+        echo $valor;
+        print "impresion";
+    }
+
+    public function main(): void {
+        echo $propiedad . $propiedad2 . $propiedad3;
+        print "test" . $valor2 . "tester";
+        $scanner = trim(fgets(STDIN));
+        switch ($scanner) {
+            case "prueba":
+                echo "Ejecucion #1 correcta";
+                break;
+            case "test":
+                echo "Ejecucion #2 correcta";
+                break;
+            default:
+                echo "Ejecucion por defecto";
+        }
+        $contador = 0;
+        do {
+            $contador++;
+        } while ($contador <= 5);
+    }
+
+}
