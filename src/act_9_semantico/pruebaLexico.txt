@@ -1,0 +1,49 @@
+$entero = 5;
+$flotante = 1.5;
+$booleano = true;
+$booleano2 = false;
+$cadena = "ejemplo";
+$cadena2 = "";
+
+x + y * 5;
+( a - b ) / c;
+10 > 5 && 3 <= 4;
+( x + y ) * ( z - w );
+
+if ($x > 0) {
+    $entero = 1;
+} else {
+    $entero = 2;
+}
+if ($x > 0) {
+    $entero = 3;
+} elseif ($x == 0) {
+    $entero = 4;
+} else {
+    $entero = 5;
+}
+while ($x < 10) {
+    $entero = 6;
+}
+for ($i = 0; $i < 10; $i = $i + 1) {
+    $entero = 7;
+}
+
+namespace Carpeta\carpeta\archivo;
+use Carpeta\carpeta\archivo;
+class MiClaseTest{
+    $x = 0;
+    $y = 0;
+}
+class MiClase{
+    public $propiedad, $propiedad2, $propiedad3;
+    public function __construct($valor, $valor2, $valor3) {
+        $x = $x + 1;
+    }
+    public function mostrarPropiedad() {
+        $y = $Y + 1;
+    }
+}
+function sinretorno(): void {
+    $z = 1;
+}

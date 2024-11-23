@@ -1,0 +1,29 @@
+
+use Carpeta\carpeta\archivo;
+
+class MiClase{
+private function main(): void {
+        echo $propiedad . $propiedad2 . $propiedad3;
+        print "test" . $valor2 . "tester";
+        $scanner = trim(fgets(STDIN));
+        switch ($scanner) {
+            case "prueba":
+                echo "Ejecucion #1 correcta";
+                break;
+            case "test":
+                echo "Ejecucion #2 correcta";
+                break;
+            default:
+                echo "Ejecucion por defecto";
+        }
+   }
+
+protected function procesarValores($valor, $valor2, $valor3): void {
+    $valor = $valor * 3;
+    $valor2 = $valor2 + 32;
+    $valor3 = ($valor - 7) + ($valor2 / 4);
+    
+    echo "Valores procesados: $valor, $valor2, $valor3\n";
+    print "Impresión inicial realizada.\n";
+    }
+}
