@@ -1,0 +1,288 @@
+/* 
+VASQUEZ DENIZ ROBERTO
+ESTRADA RAMIREZ JESUS ISAAC
+PUENTES VEGA ANGEL DANIEL
+CORTES UBALDO HAYDEE JOSSELYN
+LENGUAJE PHP
+*/
+
+package act_8_sintactico;
+
+import java_cup.runtime.*;
+
+parser code
+{:
+    public void syntax_error (Symbol s)
+    {
+        report_error("Error de sintaxis en linea: " + (s.left+1) +
+                    " ,columna: "+(s.right+1)+" , simbolo: "+s.value, null);
+    }
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception
+    {
+        report_fatal_error("Error de sintaxis no recuperable en linea: " + (s.left+1) +
+                    " ,columna: "+(s.right+1)+" , simbolo: "+s.value, null);
+    }
+:};
+
+/*SIMBOLOS TERMINALES*/
+terminal NAMESPACE, USE, CLASES, PUBLIC, PRIVATE, PROTECTED, STATIC, FINAL, FUNCTION, CONSTRUCT, CONST, VOID, OR, TRUE, FALSE, IF, ELSEIF, ELSE, FOR, WHILE, DO, SWITCH, CASE, BREAK, DEFAULT, ECHO, PRINT, TRIM, FGETS, STDIN;
+terminal LLAVE_APERTURA, LLAVE_CIERRE, PARENTESIS_APERTURA, PARENTESIS_CIERRE, CORCHETE_APERTURA, CORCHETE_CIERRE, PUNTO_COMA, COMA, DOS_PUNTOS, PUNTO, OPERADOR_ASIGNACION, OPERADOR_IGUALDAD, OPERADOR_IDENTIDAD, OPERADOR_DESIGUALDAD, OPERADOR_SUMA, OPERADOR_RESTA, OPERADOR_MULTIPLICACION, OPERADOR_DIVISION, BARRA_INVERSA, OPERADOR_MODULO, OPERADOR_LOGICO_AND, OPERADOR_LOGICO_OR, OPERADOR_LOGICO_NOT, MAYOR, MENOR, MAYOR_IGUAL, MENOR_IGUAL;
+terminal IDENTIFICADOR, VARIABLE, CONSTANTE, NUMERO_ENTERO, NUMERO_FLOTANTE;
+terminal VARIABLE_INVALIDO;
+terminal COMENTARIO_LINEA, COMENTARIO_BLOQUE, CADENA;
+
+/*SIMBOLOS NO TERMINALES*/
+non terminal programa, sentencias, sentencia, lista_sentencias, lista_declaraciones, pakage, importar, pakage_rec, importar_rec, dec_entero, dec_flotante, dec_booleano, tipo_bool, dec_cadena, asignacion, auto_valuacion, impresiones, rec_impresiones, scanner, expresion, operacion_aritmetica, operacion_logica, estructura_control, if_sentencia, ifbucle, while_sentencia, do_while_sentencia, for_sentencia, switch_sentencia, val_switch, rec_switch, definicion_clases, cuerpo_clase, clases_rec, propiedad_variable, propiedad_constante, visibilidad_var, visibilidad_fun, constructor, funciones, rec_constantes, variable_declaracion, parametros_funciones,funciones_sin, lista_funciones;
+
+/*DECLARACIÓN DE PRECEDENCIA Y ASOCIATIVIDAD*/
+precedence left OPERADOR_LOGICO_OR;
+precedence left OPERADOR_LOGICO_AND;
+precedence left OPERADOR_IGUALDAD, OPERADOR_DESIGUALDAD;
+precedence left MAYOR, MENOR, MAYOR_IGUAL, MENOR_IGUAL;
+precedence left OPERADOR_SUMA, OPERADOR_RESTA;
+precedence left OPERADOR_MULTIPLICACION, OPERADOR_DIVISION, OPERADOR_MODULO;
+
+/*REGLAS GRAMATICALES*/
+
+/* Permitir múltiples sentencias separadas por punto y coma */
+start with programa;
+
+/* Regla inicial que obliga al orden pakage, importar, definicion_clases */
+programa ::= pakage importar definicion_clases
+           | pakage definicion_clases
+           | importar definicion_clases
+           | definicion_clases;
+
+/* La regla 'sentencias' permite que haya una o más sentencias separadas por punto y coma */
+sentencias::= lista_sentencias
+            | /* vacío */ ;
+
+lista_sentencias::= lista_sentencias sentencia PUNTO_COMA
+                  | lista_sentencias estructura_control
+                  | sentencia PUNTO_COMA
+                  | estructura_control;
+
+sentencia::= lista_declaraciones
+           | operacion_aritmetica
+           | operacion_logica
+           | PARENTESIS_APERTURA expresion PARENTESIS_CIERRE;
+
+lista_declaraciones::= dec_entero 
+                    | dec_flotante 
+                    | dec_booleano 
+                    | dec_cadena
+                    | asignacion
+                    | auto_valuacion
+                    | impresiones
+                    | scanner;
+
+/* Reglas para importaciones */
+pakage::= NAMESPACE IDENTIFICADOR pakage_rec PUNTO_COMA {: 
+                System.out.println("Declaracion de pakage"); 
+          :};
+importar::= USE IDENTIFICADOR importar_rec PUNTO_COMA {: 
+                System.out.println("Declaracion de importar"); 
+          :};
+pakage_rec::= BARRA_INVERSA IDENTIFICADOR pakage_rec |;
+importar_rec::= BARRA_INVERSA IDENTIFICADOR importar_rec |;
+
+/* Reglas para declaraciones */
+dec_entero::= VARIABLE OPERADOR_ASIGNACION NUMERO_ENTERO {:
+                System.out.println("Declaracion de numero entero");
+            :};
+dec_flotante::= VARIABLE OPERADOR_ASIGNACION NUMERO_FLOTANTE {:
+                System.out.println("Declaracion de numero flotante");
+            :};
+dec_booleano::= VARIABLE OPERADOR_ASIGNACION tipo_bool {:
+                System.out.println("Declaracion de booleano");
+            :};
+tipo_bool::= TRUE | FALSE;
+dec_cadena::= VARIABLE OPERADOR_ASIGNACION CADENA {:
+                System.out.println("Declaracion de cadena");
+            :};
+
+asignacion::= VARIABLE OPERADOR_ASIGNACION operacion_aritmetica {:
+                System.out.println("Asignación realizada");
+            :};
+
+auto_valuacion::= VARIABLE OPERADOR_SUMA OPERADOR_SUMA {:
+                System.out.println("Autosuma + 1 realizada");
+            :} | VARIABLE OPERADOR_RESTA OPERADOR_RESTA {:
+                System.out.println("Autoresta - 1 realizada");
+            :} ;
+
+
+
+impresiones::= ECHO VARIABLE rec_impresiones {:
+                System.out.println("Impresion tipo echo");
+             :} | ECHO CADENA rec_impresiones {:
+                System.out.println("Impresion tipo echo");
+             :} | PRINT VARIABLE rec_impresiones {:
+                System.out.println("Impresion tipo print");
+             :} | PRINT CADENA rec_impresiones {:
+                System.out.println("Impresion tipo print");
+             :};
+rec_impresiones::= PUNTO VARIABLE rec_impresiones | PUNTO CADENA rec_impresiones | ;
+
+scanner::= VARIABLE OPERADOR_ASIGNACION TRIM PARENTESIS_APERTURA FGETS PARENTESIS_APERTURA STDIN PARENTESIS_CIERRE PARENTESIS_CIERRE {:
+                System.out.println("Lectura de entrada de consola");
+            :} ;
+
+/* Reglas para operaciones aritméticas */
+expresion::= operacion_aritmetica
+            | operacion_logica
+            | NUMERO_ENTERO
+            | NUMERO_FLOTANTE
+            | VARIABLE
+            | PARENTESIS_APERTURA expresion PARENTESIS_CIERRE;
+
+operacion_aritmetica::= expresion OPERADOR_SUMA expresion {:
+                System.out.println("Suma realizada");
+            :}
+            | expresion OPERADOR_RESTA expresion {:
+                System.out.println("Resta realizada");
+            :}
+            | expresion OPERADOR_MULTIPLICACION expresion {:
+                System.out.println("Multiplicación realizada");
+            :}
+            | expresion OPERADOR_DIVISION expresion {:
+                System.out.println("División realizada");
+            :}
+            | expresion OPERADOR_MODULO expresion {:
+                System.out.println("Operación módulo realizada");
+            :};
+
+/* Reglas para operaciones lógicas */
+operacion_logica::= expresion MAYOR expresion {:
+                System.out.println("Comparación mayor realizada");
+            :}
+            | expresion MENOR expresion {:
+                System.out.println("Comparación menor realizada");
+            :}
+            | expresion MAYOR_IGUAL expresion {:
+                System.out.println("Comparación mayor o igual realizada");
+            :}
+            | expresion MENOR_IGUAL expresion {:
+                System.out.println("Comparación menor o igual realizada");
+            :}
+            | expresion OPERADOR_IGUALDAD expresion {:
+                System.out.println("Comparación de igualdad realizada");
+            :}
+            | expresion OPERADOR_DESIGUALDAD expresion {:
+                System.out.println("Comparación de desigualdad realizada");
+            :}
+            | expresion OPERADOR_LOGICO_AND expresion {:
+                System.out.println("Operación lógica AND realizada");
+            :}
+            | expresion OPERADOR_LOGICO_OR expresion {:
+                System.out.println("Operación lógica OR realizada");
+            :};
+
+/* Reglas para estructuras de control */
+estructura_control::= if_sentencia
+                    | while_sentencia
+                    | do_while_sentencia
+                    | for_sentencia
+                    | switch_sentencia;
+
+/* Regla para la sentencia if */
+if_sentencia::= IF PARENTESIS_APERTURA expresion PARENTESIS_CIERRE LLAVE_APERTURA sentencias LLAVE_CIERRE ifbucle
+                {: System.out.println("Sentencia if procesada"); :};
+
+ifbucle::= ELSE LLAVE_APERTURA sentencias LLAVE_CIERRE
+                {: System.out.println("Sentencia else procesada"); :}
+         | ELSEIF PARENTESIS_APERTURA expresion PARENTESIS_CIERRE LLAVE_APERTURA sentencias LLAVE_CIERRE ifbucle
+                {: System.out.println("Sentencia elseif procesada"); :};
+
+/* Regla para la sentencia while */
+while_sentencia::= WHILE PARENTESIS_APERTURA expresion PARENTESIS_CIERRE LLAVE_APERTURA sentencias LLAVE_CIERRE
+                   {: System.out.println("Sentencia while procesada"); :};
+
+/* Regla para la sentencia do while */
+do_while_sentencia::= DO LLAVE_APERTURA sentencias LLAVE_CIERRE WHILE PARENTESIS_APERTURA expresion PARENTESIS_CIERRE PUNTO_COMA
+                      {: System.out.println("Sentencia while procesada"); :};
+
+/* Regla para la sentencia for */
+for_sentencia::= FOR PARENTESIS_APERTURA dec_entero PUNTO_COMA expresion PUNTO_COMA asignacion PARENTESIS_CIERRE LLAVE_APERTURA sentencias LLAVE_CIERRE
+                 {: System.out.println("Sentencia for procesada"); :}; 
+
+/* Regla para la sentencia switch */
+switch_sentencia::= SWITCH PARENTESIS_APERTURA VARIABLE PARENTESIS_CIERRE LLAVE_APERTURA 
+                    CASE val_switch DOS_PUNTOS sentencias BREAK PUNTO_COMA rec_switch
+                    DEFAULT DOS_PUNTOS sentencias LLAVE_CIERRE {: 
+                        System.out.println("Sentencia switch procesada"); :};
+val_switch::= CADENA | NUMERO_ENTERO | NUMERO_FLOTANTE | tipo_bool ;
+rec_switch::= CASE val_switch DOS_PUNTOS sentencias BREAK PUNTO_COMA rec_switch | ;
+
+/* Reglas para clases */
+definicion_clases::= CLASES IDENTIFICADOR LLAVE_APERTURA 
+                      cuerpo_clase
+                      LLAVE_CIERRE {: System.out.println("Definicion de clase"); :} ;
+
+cuerpo_clase::= propiedad_variable propiedad_constante constructor lista_funciones
+               | propiedad_constante constructor lista_funciones
+               | propiedad_variable constructor lista_funciones
+               | propiedad_variable propiedad_constante lista_funciones
+               | propiedad_variable propiedad_constante constructor
+               | propiedad_variable constructor
+               | propiedad_variable lista_funciones
+               | propiedad_constante lista_funciones
+               | propiedad_constante constructor
+               | propiedad_variable propiedad_constante
+               | constructor lista_funciones
+               | propiedad_variable
+               | propiedad_constante
+               | constructor
+               | lista_funciones
+               | ;
+
+
+propiedad_variable ::= visibilidad_var VARIABLE clases_rec PUNTO_COMA {:
+    System.out.println("Definicion de la propiedad en variables de clase");
+:}
+                      | propiedad_variable visibilidad_var VARIABLE clases_rec PUNTO_COMA {:
+                          System.out.println("Definicion de otra propiedad en variables de clase");
+                      :} ;
+
+
+variable_declaracion ::= VARIABLE
+                       | VARIABLE COMA variable_declaracion
+                       ;
+propiedad_constante::= CONST CONSTANTE OPERADOR_ASIGNACION CADENA PUNTO_COMA rec_constantes {:
+                            System.out.println("Definicion de la propiedad en constantes de clase");
+                     :} | CONST CONSTANTE OPERADOR_ASIGNACION NUMERO_ENTERO PUNTO_COMA rec_constantes{:
+                            System.out.println("Definicion de la propiedad en constantes de clase");
+                     :} | CONST CONSTANTE OPERADOR_ASIGNACION NUMERO_FLOTANTE PUNTO_COMA rec_constantes {:
+                            System.out.println("Definicion de la propiedad en constantes de clase");
+                     :} | CONST CONSTANTE OPERADOR_ASIGNACION tipo_bool PUNTO_COMA rec_constantes {:
+                            System.out.println("Definicion de la propiedad en constantes de clase");
+                     :} ;
+
+rec_constantes::= CONST CONSTANTE OPERADOR_ASIGNACION CADENA PUNTO_COMA rec_constantes
+                | CONST CONSTANTE OPERADOR_ASIGNACION NUMERO_ENTERO PUNTO_COMA rec_constantes
+                | CONST CONSTANTE OPERADOR_ASIGNACION NUMERO_FLOTANTE PUNTO_COMA rec_constantes
+                | CONST CONSTANTE OPERADOR_ASIGNACION tipo_bool PUNTO_COMA rec_constantes | ;
+
+clases_rec::= COMA VARIABLE clases_rec |;
+
+visibilidad_var::= PUBLIC | PRIVATE | PROTECTED | PUBLIC STATIC | PRIVATE STATIC | PROTECTED STATIC ;
+visibilidad_fun::= PUBLIC | PRIVATE | PROTECTED | PUBLIC STATIC | PRIVATE STATIC | PROTECTED STATIC | PUBLIC FINAL | PRIVATE FINAL | PROTECTED FINAL ;
+
+constructor::= visibilidad_fun FUNCTION CONSTRUCT PARENTESIS_APERTURA VARIABLE clases_rec PARENTESIS_CIERRE LLAVE_APERTURA sentencias LLAVE_CIERRE {:
+                System.out.println("Definicion del constructor");
+            :} ;
+lista_funciones ::= funciones
+                  | lista_funciones funciones;
+
+funciones::= visibilidad_fun FUNCTION IDENTIFICADOR parametros_funciones LLAVE_APERTURA sentencias LLAVE_CIERRE {:
+                System.out.println("Definicion de la funcion");
+           :} | visibilidad_fun FUNCTION IDENTIFICADOR parametros_funciones DOS_PUNTOS VOID LLAVE_APERTURA sentencias LLAVE_CIERRE {:
+                System.out.println("Definicion de la funcion void");
+           :} | visibilidad_fun FUNCTION IDENTIFICADOR PARENTESIS_APERTURA  PARENTESIS_CIERRE LLAVE_APERTURA sentencias LLAVE_CIERRE {:
+                System.out.println("Definicion de la funcion sin parametros");
+           :} | visibilidad_fun FUNCTION IDENTIFICADOR PARENTESIS_APERTURA  PARENTESIS_CIERRE DOS_PUNTOS VOID LLAVE_APERTURA sentencias LLAVE_CIERRE {:
+                System.out.println("Definicion de la funcion void sin parametros");
+           :} ;
+
+parametros_funciones::= PARENTESIS_APERTURA variable_declaracion PARENTESIS_CIERRE;

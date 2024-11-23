@@ -1,0 +1,44 @@
+namespace Carpeta\carpeta\archivo;
+
+class MiClase {
+
+public $propiedad, $variable23, $caja12;
+protected $propiedad2;
+private $propiedad3;
+
+
+    public final function __construct($valor, $valor2, $valor3) {
+        echo $valor;
+        print "impresion";
+    }
+
+protected static function main(): void {
+        if ($x > 0) {
+            $entero = 1;
+        } else {
+            $entero = 2;
+        }
+
+        if ($x > 0) {
+            $entero = 3;
+        } elseif ($x == 0) {
+            $entero = 4;
+        } elseif ($x !=12) {
+            $entero = 9;
+        }else {
+            $entero = 5;
+        }
+
+        while ($x < 10) {
+            $entero = 6;
+        }
+
+        for ($i = 0; $i < 10; $i = $i + 1) {
+            $entero = 7;
+        }
+
+
+    }
+
+}
+
